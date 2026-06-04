@@ -1,6 +1,6 @@
 import { TestBed } from '@angular/core/testing';
 import { provideHttpClient } from '@angular/common/http';
-import { CarService } from './car.service'; // Fixed: Imported the service class!
+import { CarService } from './car.service'; 
 
 describe('CarService', () => {
   let service: CarService;
@@ -9,7 +9,7 @@ describe('CarService', () => {
     TestBed.configureTestingModule({
       providers: [
         CarService,
-        provideHttpClient() // Plugs in HTTP capabilities so the test module doesn't crash
+        provideHttpClient() 
       ]
     });
     service = TestBed.inject(CarService);

@@ -1,0 +1,61 @@
+<div class="container my-5">
+  <div class="d-flex justify-content-between align-items-center mb-4 border-bottom pb-3">
+    <h2 class="fw-bold text-dark m-0">
+      <i class="bi bi-car-front-fill text-primary me-2"></i>Available Rental Fleet
+    </h2>
+    <span class="badge bg-secondary fs-6">{{ cars.length }} Vehicles Loaded</span>
+  </div>
+
+  @if (cars.length === 0) {
+    <div class="alert alert-info text-center shadow-sm p-4" role="alert">
+      <i class="bi bi-info-circle-fill display-6 text-info mb-2 d-block"></i>
+      <h5 class="alert-heading fw-bold">No Vehicles Found</h5>
+      <p class="mb-0 text-muted">There are currently no rental vehicles registered in the system database.</p>
+    </div>
+  }
+
+  <div class="row g-4">
+    @for (car of cars; track car.id) {
+      <div class="col-12 col-md-6 col-lg-4">
+        <div class="card h-100 shadow-sm border-light-subtle rounded-3 transition-hover">
+          
+          <div class="card-header bg-light d-flex justify-content-between align-items-center py-3">
+            <h5 class="card-title fw-bold m-0 text-truncate" style="max-width: 70%;">
+              {{ car.brand }} <span class="text-secondary font-monospace fs-6 fw-normal">{{ car.model }}</span>
+            </h5>
+            <span [class]="car.status === 'AVAILABLE' ? 'badge bg-success-subtle text-success border border-success-subtle px-2 py-1' : 'badge bg-danger-subtle text-danger border border-danger-subtle px-2 py-1'">
+              {{ car.status }}
+            </span>
+          </div>
+
+          <div class="card-body">
+            <ul class="list-unstyled mb-4">
+              <li class="mb-2 text-muted">
+                <i class="bi bi-fuel-pump text-primary me-2"></i>
+                <strong>Fuel Profile:</strong> {{ car.fuelType }}
+              </li>
+              <li class="mb-2 text-muted">
+                <i class="bi bi-people text-primary me-2"></i>
+                <strong>Capacity:</strong> {{ car.seatingCapacity }} Seats
+              </li>
+            </ul>
+            <div class="d-flex align-items-baseline justify-content-between border-top pt-3">
+              <span class="text-uppercase text-muted small fw-bold">Daily Rate</span>
+              <h4 class="text-primary fw-extrabold m-0">
+                LKR {{ car.dailyPrice | number }} <span class="fs-6 fw-light text-secondary">/ day</span>
+              </h4>
+            </div>
+          </div>
+
+          <div class="card-footer bg-white border-0 pb-3 pt-0">
+            <button class="btn btn-primary w-100 fw-bold py-2 shadow-sm rounded-2" 
+                    [disabled]="car.status !== 'AVAILABLE'">
+              <i class="bi bi-calendar-check me-2"></i>Book Vehicle
+            </button>
+          </div>
+
+        </div>
+      </div>
+    }
+  </div>
+</div>
