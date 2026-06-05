@@ -20,6 +20,17 @@ export class BookingService {
   constructor(private http: HttpClient) { }
 
   createBooking(bookingData: BookingRequest): Observable<any> {
-    return this.http.post(`${this.apiUrl}/create`, bookingData);
+  
+    const nestedPayload = {
+      customerName: bookingData.customerName,
+      contactNumber: bookingData.contactNumber,
+      startDate: bookingData.startDate,
+      endDate: bookingData.endDate,
+      car: {
+        id: bookingData.carId 
+      }
+    };
+
+    return this.http.post(this.apiUrl, nestedPayload);
   }
 }

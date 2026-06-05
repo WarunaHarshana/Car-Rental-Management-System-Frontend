@@ -53,16 +53,32 @@ export class CarListComponent implements OnInit {
   }
 
   onSubmitBooking(): void {
-    this.bookingService.createBooking(this.bookingForm).subscribe({
-      next: (res) => {
-        this.successMessage = `Reservation confirmed successfully for the ${this.selectedCar?.brand}!`;
-        this.bookingForm = { carId: 0, customerName: '', contactNumber: '', startDate: '', endDate: '' };
-        this.loadCars();
-      },
-      error: (err) => {
-        this.errorMessage = 'Failed to process booking request. Please check your backend connection.';
-        console.error('Booking submission error:', err);
-      }
-    });
-  }
+  this.errorMessage = '';
+  this.successMessage = '';
+
+  console.log('Sending booking payload to backend:', this.bookingForm);
+
+  this.bookingService.createBooking(this.bookingForm).subscribe({
+    next: (res: any) => {
+      //Display success message on the overlay
+      this.successMessage = `Excellent! Reservation confirmed successfully for the ${this.selectedCar?.brand}!`;
+      console.log('Backend response:', res);
+
+      //Clear out the form inputs for the next submission
+      this.bookingForm = {
+        carId: 0,
+        customerName: '',
+        contactNumber: '',
+        startDate: '',
+        endDate: ''
+      };
+
+      this.loadCars();
+    },
+    error: (err: any) => {
+      this.errorMessage = 'Failed to process booking request. Please verify your data or backend connection.';
+      console.error('Booking submission error details:', err);
+    }
+  });
+}
 }
