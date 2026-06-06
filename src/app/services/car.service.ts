@@ -2,7 +2,6 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 
-
 export interface Car {
   id?: number;
   brand: string;
@@ -14,19 +13,21 @@ export interface Car {
 }
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class CarService {
-
-  
   private apiUrl = 'http://localhost:8080/api/cars';
 
-  
-  constructor(private http: HttpClient) { }
+  constructor(private http: HttpClient) {}
 
-  //Fetch all cars from the backend database 
+  //Fetch all cars 
   getAllCars(): Observable<Car[]> {
     return this.http.get<Car[]>(this.apiUrl);
+  }
+
+  //find a  car by its ID
+  getCar(id: number): Observable<any> {
+    return this.http.get(`${this.apiUrl}/${id}`);
   }
 
   //Add a new car

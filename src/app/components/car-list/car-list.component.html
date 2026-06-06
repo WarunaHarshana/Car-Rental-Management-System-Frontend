@@ -14,8 +14,31 @@
     </div>
   }
 
+  <!-- Search & filter bar -->
+  <div class="row g-3 mb-4">
+    <div class="col-12 col-md-5">
+      <div class="input-group">
+        <span class="input-group-text bg-white"><i class="bi bi-search text-muted"></i></span>
+        <input type="text" class="form-control" placeholder="Search by brand or model"
+               name="searchTerm" [(ngModel)]="searchTerm">
+      </div>
+    </div>
+    <div class="col-6 col-md-4">
+      <select class="form-select" name="fuelFilter" [(ngModel)]="fuelFilter">
+        <option value="">All fuel types</option>
+        @for (fuel of fuelTypes; track fuel) {
+          <option [value]="fuel" [textContent]="fuel"></option>
+        }
+      </select>
+    </div>
+    <div class="col-6 col-md-3">
+      <input type="number" min="0" class="form-control" placeholder="Max price / day"
+             name="maxPrice" [(ngModel)]="maxPrice">
+    </div>
+  </div>
+
   <div class="row g-4">
-    @for (car of cars; track car.id) {
+    @for (car of filteredCars; track car.id) {
       <div class="col-12 col-md-6 col-lg-4">
         <div class="card h-100 shadow-sm border-light-subtle rounded-3 transition-hover">
           
@@ -51,6 +74,15 @@
             </button>
           </div>
 
+        </div>
+      </div>
+    }
+    @if (cars.length > 0 && filteredCars.length === 0) {
+      <div class="col-12">
+        <div class="alert alert-warning text-center shadow-sm p-4 mb-0" role="alert">
+          <i class="bi bi-funnel display-6 text-warning mb-2 d-block"></i>
+          <h5 class="alert-heading fw-bold">No cars match your search</h5>
+          <p class="mb-0 text-muted">Try clearing the search box or widening your filters.</p>
         </div>
       </div>
     }

@@ -14,6 +14,30 @@ import { BookingService, BookingRequest } from '../../services/booking.service';
 export class CarListComponent implements OnInit {
   
   cars: Car[] = [];
+
+  // Search & filter 
+  searchTerm = '';
+  fuelFilter = '';
+  maxPrice: number | null = null;
+
+  // Unique fuel types pulled from the loaded cars 
+  get fuelTypes(): string[] {
+    return Array.from(new Set(this.cars.map(c => c.fuelType).filter(Boolean)));
+  }
+
+  // The list actually rendered in the template, after applying the filters
+  get filteredCars(): Car[] {
+    const term = this.searchTerm.trim().toLowerCase();
+    return this.cars.filter(car => {
+      const matchesSearch =
+        !term || (car.brand + ' ' + car.model).toLowerCase().includes(term);
+      const matchesFuel = !this.fuelFilter || car.fuelType === this.fuelFilter;
+      const matchesPrice =
+        this.maxPrice == null || car.dailyPrice <= Number(this.maxPrice);
+      return matchesSearch && matchesFuel && matchesPrice;
+    });
+  }
+
   selectedCar: Car | null = null; // Tracks which car is currently being booked
 
   // Form model structure
