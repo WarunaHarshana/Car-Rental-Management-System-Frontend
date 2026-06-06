@@ -19,9 +19,9 @@ export class AuthService {
   login(credentials: any): Observable<any> {
     return this.http.post(`${this.apiUrl}/login`, credentials).pipe(
       tap((response: any) => {
-        if (response && response.token) {
-          localStorage.setItem('token', response.token);
-          localStorage.setItem('userRole', response.role);
+        
+        if (response && response.id) {
+          localStorage.setItem('currentUser', JSON.stringify(response));
         }
       })
     );
@@ -32,6 +32,15 @@ export class AuthService {
   }
 
   isLoggedIn(): boolean {
-    return localStorage.getItem('token') !== null;
+    return localStorage.getItem('currentUser') !== null;
+  }
+
+  getCurrentUser(): any {
+    const raw = localStorage.getItem('currentUser');
+    return raw ? JSON.parse(raw) : null;
+  }
+
+  isAdmin(): boolean {
+    return this.getCurrentUser()?.role === 'ADMIN';
   }
 }

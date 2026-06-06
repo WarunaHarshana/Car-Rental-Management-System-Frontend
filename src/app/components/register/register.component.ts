@@ -1,19 +1,20 @@
 import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+import { RouterLink } from '@angular/router';
 import { AuthService } from '../../services/auth.service';
 
 @Component({
   selector: 'app-register',
   standalone: true,
-  imports: [CommonModule, FormsModule],
+  imports: [CommonModule, FormsModule, RouterLink],
   templateUrl: './register.component.html',
   styleUrl: './register.component.css'
 })
 export class RegisterComponent {
 
   registerData = {
-    username: '',
+    name: '',
     password: '',
     email: '',
     role: 'CUSTOMER' 
@@ -32,7 +33,7 @@ export class RegisterComponent {
       next: (res: any) => {
         this.successMessage = 'Registration successful! You can now sign in.';
         console.log('User registered:', res);
-        this.registerData = { username: '', password: '', email: '', role: 'CUSTOMER' };
+        this.registerData = { name: '', password: '', email: '', role: 'CUSTOMER' };
       },
       error: (err: any) => {
         this.errorMessage = err.error?.message || 'Registration failed. Username or email might already exist.';

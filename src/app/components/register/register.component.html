@@ -26,15 +26,15 @@
       <form #registerForm="ngForm" (ngSubmit)="onRegister()">
         
         <div class="mb-3">
-          <label class="form-label text-secondary small fw-bold">Username</label>
+          <label class="form-label text-secondary small fw-bold">Full Name</label>
           <div class="input-group">
             <span class="input-group-text bg-light border-end-0 text-muted"><i class="bi bi-person"></i></span>
             <input type="text" 
                    class="form-control bg-light border-start-0 ps-0" 
-                   name="username"
-                   [(ngModel)]="registerData.username" 
+                   name="name"
+                   [(ngModel)]="registerData.name" 
                    required
-                   placeholder="Choose a username">
+                   placeholder="Enter your full name">
           </div>
         </div>
 
