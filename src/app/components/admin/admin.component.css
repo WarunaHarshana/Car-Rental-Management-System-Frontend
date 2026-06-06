@@ -1,0 +1,12 @@
+.card-header h5 {
+  font-weight: 700;
+}
+
+.table td,
+.table th {
+  vertical-align: middle;
+}
+
+.form-select-sm {
+  min-width: 145px;
+}

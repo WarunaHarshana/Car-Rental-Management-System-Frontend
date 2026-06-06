@@ -47,6 +47,10 @@ export class BookingService {
     return this.http.get<Booking[]>(this.apiUrl);
   }
 
+  updateBookingStatus(id: number, status: string): Observable<any> {
+    return this.http.put(`${this.apiUrl}/${id}/status?status=${status}`, {});
+  }
+
   cancelBooking(id: number): Observable<any> {
     return this.http.put(`${this.apiUrl}/${id}/status?status=CANCELLED`, {});
   }
