@@ -1,0 +1,41 @@
+<div class="container my-5">
+  <h2 class="mb-4"><i class="bi bi-journal-bookmark me-2"></i>My Bookings</h2>
+
+  @if (loading) {
+    <div class="text-muted">Loading your bookings…</div>
+  } @else if (bookings.length === 0) {
+    <div class="alert alert-info">You have no bookings yet.</div>
+  } @else {
+    <div class="table-responsive">
+      <table class="table table-hover align-middle">
+        <thead class="table-light">
+          <tr>
+            <th>Car</th>
+            <th>From</th>
+            <th>To</th>
+            <th>Total (LKR)</th>
+            <th>Status</th>
+            <th></th>
+          </tr>
+        </thead>
+        <tbody>
+          @for (b of bookings; track b.id) {
+            <tr>
+              <td>
+                <span [textContent]="b.car?.brand"></span>
+                <span [textContent]="b.car?.model"></span>
+              </td>
+              <td [textContent]="b.startDate"></td>
+              <td [textContent]="b.endDate"></td>
+              <td [textContent]="b.totalPrice"></td>
+              <td><span class="badge bg-secondary" [textContent]="b.status"></span></td>
+              <td>
+                <button class="btn btn-outline-danger btn-sm" (click)="cancel(b.id)">Cancel</button>
+              </td>
+            </tr>
+          }
+        </tbody>
+      </table>
+    </div>
+  }
+</div>
