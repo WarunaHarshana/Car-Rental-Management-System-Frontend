@@ -72,6 +72,9 @@
                     (click)="openBookingModal(car)">
               <i class="bi bi-calendar-check me-2"></i>Book Vehicle
             </button>
+
+            <a class="btn btn-outline-primary btn-sm" [routerLink]="['/cars', car.id]">View details</a>
+            
           </div>
 
         </div>

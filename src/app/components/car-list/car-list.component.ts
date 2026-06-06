@@ -1,13 +1,14 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms'; 
+import { RouterLink } from '@angular/router';
 import { CarService, Car } from '../../services/car.service';
 import { BookingService, BookingRequest } from '../../services/booking.service';
 
 @Component({
   selector: 'app-car-list',
   standalone: true,
-  imports: [CommonModule, FormsModule], 
+  imports: [CommonModule, FormsModule, RouterLink], 
   templateUrl: './car-list.component.html',
   styleUrl: './car-list.component.css'
 })

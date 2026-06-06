@@ -1,0 +1,26 @@
+<div class="container mt-4">
+  @if (loading) {
+    <div class="text-center text-muted mt-5">Loading…</div>
+  } @else if (car) {
+    <div class="card shadow-sm">
+      <div class="card-body">
+        <h3 class="card-title mb-2">
+          <span [textContent]="car.brand"></span>
+          <span [textContent]="car.model"></span>
+        </h3>
+        <span class="badge bg-success mb-3" [textContent]="car.status"></span>
+
+        <ul class="list-group list-group-flush mb-3">
+          <li class="list-group-item">Fuel type: <strong [textContent]="car.fuelType"></strong></li>
+          <li class="list-group-item">Seats: <strong [textContent]="car.seatingCapacity"></strong></li>
+          <li class="list-group-item">Price / day: LKR <strong [textContent]="car.dailyPrice"></strong></li>
+        </ul>
+
+        <a class="btn btn-outline-secondary" routerLink="/cars">← Back to fleet</a>
+        <a class="btn btn-primary ms-2" routerLink="/cars">Book this car</a>
+      </div>
+    </div>
+  } @else {
+    <div class="alert alert-warning">Car not found.</div>
+  }
+</div>
