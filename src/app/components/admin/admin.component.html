@@ -160,4 +160,49 @@
       }
     </div>
   </div>
+
+  <div class="card shadow-sm border-0 mt-4">
+    <div class="card-header bg-light d-flex justify-content-between align-items-center">
+      <h5 class="mb-0">Transactions</h5>
+      <span class="badge bg-success">Revenue: LKR {{ totalRevenue }}</span>
+    </div>
+    <div class="card-body p-0">
+      @if (loadingPayments) {
+        <div class="p-3 text-muted">Loading transactions...</div>
+      } @else if (payments.length === 0) {
+        <div class="p-3 text-muted">No transactions yet.</div>
+      } @else {
+        <div class="table-responsive">
+          <table class="table table-hover align-middle mb-0">
+            <thead class="table-light">
+              <tr>
+                <th>ID</th>
+                <th>Booking</th>
+                <th>Amount</th>
+                <th>Method</th>
+                <th>Status</th>
+                <th>Date</th>
+              </tr>
+            </thead>
+            <tbody>
+              @for (p of payments; track p.id) {
+                <tr>
+                  <td>{{ p.id }}</td>
+                  <td>{{ p.booking?.id }}</td>
+                  <td>LKR {{ p.amount }}</td>
+                  <td>{{ p.method }}</td>
+                  <td>
+                    <span class="badge" [class.bg-success]="p.status === 'SUCCESS'" [class.bg-secondary]="p.status !== 'SUCCESS'">
+                      {{ p.status }}
+                    </span>
+                  </td>
+                  <td>{{ p.createdAt | date:'medium' }}</td>
+                </tr>
+              }
+            </tbody>
+          </table>
+        </div>
+      }
+    </div>
+  </div>
 </div>

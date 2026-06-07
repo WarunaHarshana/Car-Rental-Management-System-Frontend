@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { CarService, Car } from '../../services/car.service';
 import { BookingService, Booking } from '../../services/booking.service';
+import { PaymentService, Payment, PaymentApiResponse } from '../../services/payment.service';
 
 @Component({
   selector: 'app-admin',
@@ -14,12 +15,14 @@ import { BookingService, Booking } from '../../services/booking.service';
 export class AdminComponent implements OnInit {
   cars: Car[] = [];
   bookings: Booking[] = [];
+  payments: Payment[] = [];
 
   editingId: number | null = null;
   car: Car = this.emptyCar();
 
   loadingCars = true;
   loadingBookings = true;
+  loadingPayments = true;
 
   successMessage = '';
   errorMessage = '';
@@ -29,12 +32,14 @@ export class AdminComponent implements OnInit {
 
   constructor(
     private carService: CarService,
-    private bookingService: BookingService
+    private bookingService: BookingService,
+    private paymentService: PaymentService
   ) {}
 
   ngOnInit(): void {
     this.loadCars();
     this.loadBookings();
+    this.loadPayments();
   }
 
   emptyCar(): Car {
@@ -81,6 +86,39 @@ export class AdminComponent implements OnInit {
         this.loadingBookings = false;
       }
     });
+  }
+
+  loadPayments(): void {
+    this.loadingPayments = true;
+    this.paymentService.getAllPayments().subscribe({
+      next: (payments: PaymentApiResponse[]) => {
+        this.payments = payments.map((payment) => ({
+          ...payment,
+          createdAt: this.normalizePaymentDate(payment.createdAt)
+        }));
+        this.loadingPayments = false;
+      },
+      error: (err) => {
+        this.errorMessage = 'Failed to load transactions.';
+        console.error('Load payments failed:', err);
+        this.loadingPayments = false;
+      }
+    });
+  }
+
+  get totalRevenue(): number {
+    return this.payments
+      .filter((payment) => payment.status === 'SUCCESS')
+      .reduce((sum, payment) => sum + (payment.amount || 0), 0);
+  }
+
+  private normalizePaymentDate(createdAt: string | number[]): string {
+    if (Array.isArray(createdAt)) {
+      const [year, month, day, hour = 0, minute = 0, second = 0, millisecond = 0] = createdAt;
+      return new Date(year, month - 1, day, hour, minute, second, millisecond).toISOString();
+    }
+
+    return createdAt;
   }
 
   startEdit(car: Car): void {

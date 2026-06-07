@@ -1,9 +1,8 @@
 {
-  // For more information, visit: https://angular.dev/ai/mcp
   "servers": {
-    "angular-cli": {
-      "command": "npx",
-      "args": ["-y", "@angular/cli", "mcp"]
+    "notion": {
+      "type": "http",
+      "url": "https://mcp.notion.com/mcp"
     }
   }
 }
