@@ -18,6 +18,7 @@ export interface Booking {
   endDate: string;
   totalPrice: number;
   status: string;
+  paymentStatus?: string;
   car?: { id: number; brand?: string; model?: string };
 }
 

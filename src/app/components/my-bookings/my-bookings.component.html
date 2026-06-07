@@ -1,6 +1,18 @@
 <div class="container my-5">
   <h2 class="mb-4"><i class="bi bi-journal-bookmark me-2"></i>My Bookings</h2>
 
+  @if (successMessage) {
+    <div class="alert alert-success">{{ successMessage }}</div>
+  }
+
+  @if (errorMessage) {
+    <div class="alert alert-danger">{{ errorMessage }}</div>
+  }
+
+  @if (infoMessage) {
+    <div class="alert alert-warning">{{ infoMessage }}</div>
+  }
+
   @if (loading) {
     <div class="text-muted">Loading your bookings…</div>
   } @else if (bookings.length === 0) {
@@ -15,6 +27,7 @@
             <th>To</th>
             <th>Total (LKR)</th>
             <th>Status</th>
+            <th>Payment</th>
             <th></th>
           </tr>
         </thead>
@@ -30,6 +43,20 @@
               <td [textContent]="b.totalPrice"></td>
               <td><span class="badge bg-secondary" [textContent]="b.status"></span></td>
               <td>
+                <span class="badge" [class.bg-success]="b.paymentStatus === 'PAID'" [class.bg-warning]="b.paymentStatus !== 'PAID'" [textContent]="b.paymentStatus ?? 'PENDING'"></span>
+              </td>
+              <td>
+                <button
+                  class="btn btn-outline-primary btn-sm me-2"
+                  (click)="pay(b)"
+                  [disabled]="b.paymentStatus === 'PAID' || actionInProgressId === b.id"
+                >
+                  @if (actionInProgressId === b.id) {
+                    Paying...
+                  } @else {
+                    Pay
+                  }
+                </button>
                 <button class="btn btn-outline-danger btn-sm" (click)="cancel(b.id)">Cancel</button>
               </td>
             </tr>
