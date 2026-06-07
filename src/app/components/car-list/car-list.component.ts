@@ -4,6 +4,7 @@ import { FormsModule } from '@angular/forms';
 import { RouterLink } from '@angular/router';
 import { CarService, Car } from '../../services/car.service';
 import { BookingService, BookingRequest } from '../../services/booking.service';
+import { AuthService } from '../../services/auth.service';
 
 @Component({
   selector: 'app-car-list',
@@ -55,7 +56,8 @@ export class CarListComponent implements OnInit {
 
   constructor(
     private carService: CarService,
-    private bookingService: BookingService
+    private bookingService: BookingService,
+    private authService: AuthService
   ) {}
 
   ngOnInit(): void {
@@ -73,6 +75,7 @@ export class CarListComponent implements OnInit {
   openBookingModal(car: Car): void {
     this.selectedCar = car;
     this.bookingForm.carId = car.id ?? 0;
+    this.bookingForm.customerName = this.authService.getCurrentUser()?.name ?? this.authService.getCurrentUser()?.email ?? '';
     this.successMessage = '';
     this.errorMessage = '';
   }
