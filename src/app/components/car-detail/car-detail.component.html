@@ -1,35 +1,157 @@
-<div class="container mt-4">
+<div class="container my-5">
   @if (loading) {
-    <div class="text-center text-muted mt-5">Loading…</div>
+    <div class="d-flex justify-content-center my-5">
+      <div class="spinner-border text-primary" role="status">
+        <span class="visually-hidden">Loading...</span>
+      </div>
+    </div>
   } @else if (car) {
-    <div class="card shadow-sm">
+    <div class="row g-4">
+      <!-- Left Column: Car Photo and Details -->
+      <div class="col-lg-7">
+        <div class="card shadow-sm border-0 rounded-3 h-100">
+          @if (getCarImageUrl(car.imageUrl)) {
+            <img [src]="getCarImageUrl(car.imageUrl)" class="card-img-top rounded-top-3" [alt]="car.brand + ' ' + car.model" style="height:350px;object-fit:cover;">
+          } @else {
+            <div class="d-flex align-items-center justify-content-center bg-light border-bottom rounded-top-3" style="height:350px;">
+              <i class="bi bi-car-front text-secondary" style="font-size:5rem;opacity:.35;"></i>
+            </div>
+          }
+          <div class="card-body p-4">
+            <div class="d-flex justify-content-between align-items-center mb-3">
+              <h3 class="fw-bold m-0 text-dark">
+                {{ car.brand }} <span class="text-secondary font-monospace fs-5 fw-normal">{{ car.model }}</span>
+              </h3>
+              <span [class]="car.status.toUpperCase() === 'AVAILABLE' ? 'badge bg-success-subtle text-success border border-success-subtle px-3 py-2 fs-6' : 'badge bg-danger-subtle text-danger border border-danger-subtle px-3 py-2 fs-6'">
+                {{ car.status }}
+              </span>
+            </div>
+            
+            <ul class="list-group list-group-flush mb-4">
+              <li class="list-group-item px-0 py-3 text-muted"><i class="bi bi-fuel-pump text-primary me-2"></i><strong>Fuel type:</strong> {{ car.fuelType }}</li>
+              <li class="list-group-item px-0 py-3 text-muted"><i class="bi bi-people text-primary me-2"></i><strong>Seating Capacity:</strong> {{ car.seatingCapacity }} Seats</li>
+              <li class="list-group-item px-0 py-3 text-muted"><i class="bi bi-wallet2 text-primary me-2"></i><strong>Price / day:</strong> LKR {{ car.dailyPrice | number }}</li>
+            </ul>
 
-      @if (getCarImageUrl(car.imageUrl)) {
-        <img [src]="getCarImageUrl(car.imageUrl)" class="card-img-top" [alt]="car.brand + ' ' + car.model" style="max-height:340px;object-fit:cover;">
-      } @else {
-        <div class="d-flex align-items-center justify-content-center bg-light border-bottom" style="height:220px;">
-          <i class="bi bi-car-front text-secondary" style="font-size:5rem;opacity:.3;"></i>
+            <a class="btn btn-outline-secondary px-4 py-2 fw-bold" routerLink="/cars">
+              <i class="bi bi-arrow-left me-2"></i>Back to fleet
+            </a>
+          </div>
         </div>
-      }
+      </div>
 
-      <div class="card-body">
-        <h3 class="card-title mb-2">
-          <span [textContent]="car.brand"></span>
-          <span [textContent]="car.model"></span>
-        </h3>
-        <span class="badge bg-success mb-3" [textContent]="car.status"></span>
+      <!-- Right Column: Booking Form -->
+      <div class="col-lg-5">
+        <div class="card shadow-sm border-0 rounded-3">
+          <div class="card-header bg-dark text-white p-4">
+            <h5 class="fw-bold m-0"><i class="bi bi-calendar-check text-primary me-2"></i>Secure Reservation</h5>
+          </div>
+          <div class="card-body p-4">
+            @if (errorMessage) {
+              <div class="alert alert-danger py-2 small rounded-3 mb-3" role="alert">
+                <i class="bi bi-exclamation-triangle-fill me-2"></i>{{ errorMessage }}
+              </div>
+            }
 
-        <ul class="list-group list-group-flush mb-3">
-          <li class="list-group-item">Fuel type: <strong [textContent]="car.fuelType"></strong></li>
-          <li class="list-group-item">Seats: <strong [textContent]="car.seatingCapacity"></strong></li>
-          <li class="list-group-item">Price / day: LKR <strong [textContent]="car.dailyPrice"></strong></li>
-        </ul>
+            @if (bookingSuccess) {
+              <div class="alert alert-success py-3 rounded-3 mb-3" role="alert">
+                <i class="bi bi-check-circle-fill me-2 fs-5"></i>{{ successMessage }}
+              </div>
+              <div class="d-grid gap-2">
+                <a routerLink="/my-bookings" class="btn btn-success fw-bold py-2 shadow-sm rounded-2">
+                  <i class="bi bi-list-check me-2"></i>Go to My Bookings
+                </a>
+                <button type="button" class="btn btn-outline-secondary fw-bold py-2 rounded-2" (click)="bookingSuccess = false">
+                  Book Another Vehicle
+                </button>
+              </div>
+            } @else {
+              @if (car.status.toUpperCase() !== 'AVAILABLE') {
+                <div class="alert alert-warning py-3 text-center mb-0" role="alert">
+                  <i class="bi bi-exclamation-circle-fill display-6 text-warning mb-2 d-block"></i>
+                  <h6 class="fw-bold mb-1">Vehicle Unavailable</h6>
+                  <p class="small text-muted mb-0">This vehicle is currently rented or under maintenance and cannot be reserved.</p>
+                </div>
+              } @else {
+                <form #bookForm="ngForm" (ngSubmit)="placeBooking()">
+                  <div class="mb-3">
+                    <label class="form-label small fw-bold text-secondary">Your Full Name</label>
+                    <input type="text" class="form-control" name="customerName" [(ngModel)]="booking.customerName" required placeholder="Enter your name">
+                  </div>
 
-        <a class="btn btn-outline-secondary" routerLink="/cars">← Back to fleet</a>
-        <a class="btn btn-primary ms-2" routerLink="/cars">Book this car</a>
+                  <div class="mb-3">
+                    <label class="form-label small fw-bold text-secondary">Contact Number</label>
+                    <input type="text" class="form-control" name="contactNumber" [(ngModel)]="booking.contactNumber" required placeholder="Enter phone number">
+                  </div>
+
+                  <div class="row g-3 mb-3">
+                    <div class="col-6">
+                      <label class="form-label small fw-bold text-secondary">Pickup Date</label>
+                      <input
+                        type="date"
+                        class="form-control"
+                        name="startDate"
+                        [(ngModel)]="booking.startDate"
+                        [min]="today"
+                        required
+                      >
+                    </div>
+                    <div class="col-6">
+                      <label class="form-label small fw-bold text-secondary">Return Date</label>
+                      <input
+                        type="date"
+                        class="form-control"
+                        name="endDate"
+                        [(ngModel)]="booking.endDate"
+                        [min]="booking.startDate || today"
+                        required
+                      >
+                    </div>
+                  </div>
+
+                  @if (isDateRangeInvalid && booking.startDate && booking.endDate) {
+                    <div class="alert alert-warning py-2 small rounded-3 mt-2 mb-3">
+                      <i class="bi bi-exclamation-circle me-1"></i>End date must be on or after start date.
+                    </div>
+                  }
+
+                  @if (booking.startDate && booking.endDate && !isDateRangeInvalid) {
+                    <div class="card shadow-sm border-primary-subtle bg-primary bg-opacity-10 bg-gradient mb-4 rounded-3">
+                      <div class="card-header fw-bold bg-primary bg-opacity-10 text-primary py-2">Booking Summary</div>
+                      <div class="card-body py-3">
+                        <p class="mb-2 text-muted small">
+                          <strong>Car:</strong> {{ car.brand }} {{ car.model }}
+                        </p>
+                        <p class="mb-2 text-muted small">
+                          <strong>Rental days:</strong> {{ rentalDays }} day(s)
+                        </p>
+                        <p class="mb-0 text-dark">
+                          <strong>Estimated Total:</strong> <span class="text-success fw-bold">LKR {{ estimatedTotal | number }}</span>
+                        </p>
+                      </div>
+                    </div>
+                  }
+
+                  <button
+                    type="submit"
+                    class="btn btn-primary w-100 fw-bold py-2 shadow-sm rounded-2"
+                    [disabled]="!bookForm.form.valid || isDateRangeInvalid"
+                  >
+                    <i class="bi bi-calendar-check me-2"></i>Book Now
+                  </button>
+                </form>
+              }
+            }
+          </div>
+        </div>
       </div>
     </div>
   } @else {
-    <div class="alert alert-warning">Car not found.</div>
+    <div class="alert alert-warning text-center p-4">
+      <i class="bi bi-exclamation-triangle-fill display-5 text-warning mb-2 d-block"></i>
+      <h5 class="fw-bold">Car not found</h5>
+      <p class="text-muted mb-3">The requested vehicle could not be found or has been removed from our database.</p>
+      <a class="btn btn-outline-secondary" routerLink="/cars">Back to fleet</a>
+    </div>
   }
 </div>
