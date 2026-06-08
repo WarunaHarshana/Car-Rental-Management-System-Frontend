@@ -3,6 +3,15 @@
     <div class="text-center text-muted mt-5">Loading…</div>
   } @else if (car) {
     <div class="card shadow-sm">
+
+      @if (car.imageUrl) {
+        <img [src]="'http://localhost:8080' + car.imageUrl" class="card-img-top" alt="{{ car.brand }} {{ car.model }}" style="max-height:340px;object-fit:cover;">
+      } @else {
+        <div class="d-flex align-items-center justify-content-center bg-light border-bottom" style="height:220px;">
+          <i class="bi bi-car-front text-secondary" style="font-size:5rem;opacity:.3;"></i>
+        </div>
+      }
+
       <div class="card-body">
         <h3 class="card-title mb-2">
           <span [textContent]="car.brand"></span>

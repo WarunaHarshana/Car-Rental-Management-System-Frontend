@@ -20,6 +20,10 @@ export class AdminComponent implements OnInit {
   editingId: number | null = null;
   car: Car = this.emptyCar();
 
+  selectedPhotoFile: File | null = null;
+  photoPreviewUrl: string | null = null;
+  uploadingPhoto = false;
+
   loadingCars = true;
   loadingBookings = true;
   loadingPayments = true;
@@ -56,6 +60,20 @@ export class AdminComponent implements OnInit {
   resetForm(): void {
     this.car = this.emptyCar();
     this.editingId = null;
+    this.selectedPhotoFile = null;
+    this.photoPreviewUrl = null;
+  }
+
+  onPhotoSelected(event: Event): void {
+    const input = event.target as HTMLInputElement;
+    if (input.files && input.files[0]) {
+      this.selectedPhotoFile = input.files[0];
+      const reader = new FileReader();
+      reader.onload = (e) => {
+        this.photoPreviewUrl = e.target?.result as string;
+      };
+      reader.readAsDataURL(this.selectedPhotoFile);
+    }
   }
 
   loadCars(): void {
@@ -130,8 +148,13 @@ export class AdminComponent implements OnInit {
       fuelType: car.fuelType,
       seatingCapacity: car.seatingCapacity,
       dailyPrice: car.dailyPrice,
-      status: car.status
+      status: car.status,
+      imageUrl: car.imageUrl
     };
+    this.selectedPhotoFile = null;
+    this.photoPreviewUrl = car.imageUrl
+      ? 'http://localhost:8080' + car.imageUrl
+      : null;
     this.successMessage = '';
     this.errorMessage = '';
   }
@@ -147,10 +170,28 @@ export class AdminComponent implements OnInit {
 
     if (this.editingId != null) {
       this.carService.updateCar(this.editingId, this.car).subscribe({
-        next: () => {
-          this.successMessage = 'Car updated successfully.';
-          this.resetForm();
-          this.loadCars();
+        next: (updatedCar) => {
+          if (this.selectedPhotoFile && updatedCar.id) {
+            this.uploadingPhoto = true;
+            this.carService.uploadCarPhoto(updatedCar.id, this.selectedPhotoFile).subscribe({
+              next: () => {
+                this.uploadingPhoto = false;
+                this.successMessage = 'Car updated with new photo.';
+                this.resetForm();
+                this.loadCars();
+              },
+              error: (err) => {
+                this.uploadingPhoto = false;
+                this.errorMessage = 'Car updated but photo upload failed.';
+                console.error('Photo upload failed:', err);
+                this.loadCars();
+              }
+            });
+          } else {
+            this.successMessage = 'Car updated successfully.';
+            this.resetForm();
+            this.loadCars();
+          }
         },
         error: (err) => {
           this.errorMessage = 'Failed to update car.';
@@ -161,10 +202,28 @@ export class AdminComponent implements OnInit {
     }
 
     this.carService.createCar(this.car).subscribe({
-      next: () => {
-        this.successMessage = 'Car added successfully.';
-        this.resetForm();
-        this.loadCars();
+      next: (createdCar) => {
+        if (this.selectedPhotoFile && createdCar.id) {
+          this.uploadingPhoto = true;
+          this.carService.uploadCarPhoto(createdCar.id, this.selectedPhotoFile).subscribe({
+            next: () => {
+              this.uploadingPhoto = false;
+              this.successMessage = 'Car added with photo.';
+              this.resetForm();
+              this.loadCars();
+            },
+            error: (err) => {
+              this.uploadingPhoto = false;
+              this.errorMessage = 'Car added but photo upload failed.';
+              console.error('Photo upload failed:', err);
+              this.loadCars();
+            }
+          });
+        } else {
+          this.successMessage = 'Car added successfully.';
+          this.resetForm();
+          this.loadCars();
+        }
       },
       error: (err) => {
         this.errorMessage = 'Failed to add car.';

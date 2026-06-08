@@ -10,6 +10,7 @@ export interface Car {
   seatingCapacity: number;
   dailyPrice: number;
   status: string;
+  imageUrl?: string;
 }
 
 @Injectable({
@@ -20,12 +21,12 @@ export class CarService {
 
   constructor(private http: HttpClient) {}
 
-  //Fetch all cars 
+  //Fetch all cars
   getAllCars(): Observable<Car[]> {
     return this.http.get<Car[]>(this.apiUrl);
   }
 
-  //find a  car by its ID
+  //find a car by its ID
   getCar(id: number): Observable<any> {
     return this.http.get(`${this.apiUrl}/${id}`);
   }
@@ -42,6 +43,13 @@ export class CarService {
 
   //Delete a car from the database
   deleteCar(id: number): Observable<void> {
-    return this.http.delete<void>(`${`${this.apiUrl}/${id}`}`);
+    return this.http.delete<void>(`${this.apiUrl}/${id}`);
+  }
+
+  //Upload a photo for a car
+  uploadCarPhoto(carId: number, file: File): Observable<Car> {
+    const formData = new FormData();
+    formData.append('file', file);
+    return this.http.post<Car>(`${this.apiUrl}/${carId}/photo`, formData);
   }
 }

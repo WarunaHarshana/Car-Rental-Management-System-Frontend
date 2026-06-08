@@ -46,11 +46,24 @@
               }
             </select>
           </div>
+          <div class="col-12">
+            <label class="form-label">Car Photo (optional)</label>
+            <input type="file" class="form-control" accept="image/*" (change)="onPhotoSelected($event)">
+            @if (photoPreviewUrl) {
+              <div class="mt-2">
+                <img [src]="photoPreviewUrl" alt="Car preview" class="img-thumbnail" style="max-height: 160px; object-fit: cover;">
+              </div>
+            }
+          </div>
         </div>
 
         <div class="d-flex gap-2 mt-4">
-          <button type="submit" class="btn btn-primary" [disabled]="!carForm.valid">
-            {{ editingId ? 'Update Car' : 'Add Car' }}
+          <button type="submit" class="btn btn-primary" [disabled]="!carForm.valid || uploadingPhoto">
+            @if (uploadingPhoto) {
+              <span class="spinner-border spinner-border-sm me-1" role="status"></span>Uploading…
+            } @else {
+              {{ editingId ? 'Update Car' : 'Add Car' }}
+            }
           </button>
           <button type="button" class="btn btn-outline-secondary" (click)="resetForm()">
             Clear
@@ -75,6 +88,7 @@
             <thead class="table-light">
               <tr>
                 <th>ID</th>
+                <th>Photo</th>
                 <th>Car</th>
                 <th>Fuel</th>
                 <th>Seats</th>
@@ -87,6 +101,13 @@
               @for (c of cars; track c.id) {
                 <tr>
                   <td>{{ c.id }}</td>
+                  <td>
+                    @if (c.imageUrl) {
+                      <img [src]="'http://localhost:8080' + c.imageUrl" alt="Car" class="img-thumbnail" style="width:60px;height:45px;object-fit:cover;">
+                    } @else {
+                      <span class="text-muted small">No photo</span>
+                    }
+                  </td>
                   <td>{{ c.brand }} {{ c.model }}</td>
                   <td>{{ c.fuelType }}</td>
                   <td>{{ c.seatingCapacity }}</td>
