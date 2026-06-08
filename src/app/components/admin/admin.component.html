@@ -137,6 +137,34 @@
       <h5 class="mb-0">Manage Cars</h5>
     </div>
     <div class="card-body p-0">
+      <div class="p-3 border-bottom bg-light-subtle">
+        <div class="row g-2">
+          <div class="col-md-4">
+            <input
+              type="text"
+              class="form-control form-control-sm"
+              placeholder="Search brand or model"
+              [(ngModel)]="carSearch"
+            >
+          </div>
+          <div class="col-md-4">
+            <select class="form-select form-select-sm" [(ngModel)]="selectedCarStatus">
+              @for (status of carStatusFilters; track status) {
+                <option [value]="status" [textContent]="status"></option>
+              }
+            </select>
+          </div>
+          <div class="col-md-4">
+            <select class="form-select form-select-sm" [(ngModel)]="selectedFuelType">
+              <option value="ALL">ALL Fuel Types</option>
+              @for (fuel of fuelTypes; track fuel) {
+                <option [value]="fuel" [textContent]="fuel"></option>
+              }
+            </select>
+          </div>
+        </div>
+      </div>
+
       @if (loadingCars) {
         <div class="p-3 text-muted">Loading cars...</div>
       } @else if (cars.length === 0) {
@@ -157,7 +185,7 @@
               </tr>
             </thead>
             <tbody>
-              @for (c of cars; track c.id) {
+              @for (c of filteredCars; track c.id) {
                 <tr>
                   <td>{{ c.id }}</td>
                   <td>
@@ -198,6 +226,19 @@
       <h5 class="mb-0">All Bookings</h5>
     </div>
     <div class="card-body p-0">
+      <div class="p-3 border-bottom bg-light-subtle">
+        <div class="row g-2">
+          <div class="col-md-4">
+            <select class="form-select form-select-sm" [(ngModel)]="selectedBookingStatus">
+              <option value="ALL">ALL Statuses</option>
+              @for (status of bookingStatuses; track status) {
+                <option [value]="status">Status: {{ status }}</option>
+              }
+            </select>
+          </div>
+        </div>
+      </div>
+
       @if (loadingBookings) {
         <div class="p-3 text-muted">Loading bookings...</div>
       } @else if (bookings.length === 0) {
@@ -217,7 +258,7 @@
               </tr>
             </thead>
             <tbody>
-              @for (b of bookings; track b.id) {
+              @for (b of filteredBookings; track b.id) {
                 <tr>
                   <td>{{ b.id }}</td>
                   <td>{{ b.customerName }}</td>
@@ -247,6 +288,25 @@
       <span class="badge bg-success">Revenue: LKR {{ totalRevenue }}</span>
     </div>
     <div class="card-body p-0">
+      <div class="p-3 border-bottom bg-light-subtle">
+        <div class="row g-2">
+          <div class="col-md-6">
+            <select class="form-select form-select-sm" [(ngModel)]="selectedPaymentStatus">
+              @for (status of paymentStatusFilters; track status) {
+                <option [value]="status">Status: {{ status }}</option>
+              }
+            </select>
+          </div>
+          <div class="col-md-6">
+            <select class="form-select form-select-sm" [(ngModel)]="selectedPaymentMethod">
+              @for (method of paymentMethodFilters; track method) {
+                <option [value]="method">Method: {{ method }}</option>
+              }
+            </select>
+          </div>
+        </div>
+      </div>
+
       @if (loadingPayments) {
         <div class="p-3 text-muted">Loading transactions...</div>
       } @else if (payments.length === 0) {
@@ -265,7 +325,7 @@
               </tr>
             </thead>
             <tbody>
-              @for (p of payments; track p.id) {
+              @for (p of filteredPayments; track p.id) {
                 <tr>
                   <td>{{ p.id }}</td>
                   <td>{{ p.booking?.id }}</td>

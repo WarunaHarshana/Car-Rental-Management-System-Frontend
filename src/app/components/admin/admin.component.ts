@@ -18,6 +18,17 @@ export class AdminComponent implements OnInit {
   bookings: Booking[] = [];
   payments: Payment[] = [];
 
+  carSearch = '';
+  selectedCarStatus = 'ALL';
+  selectedFuelType = 'ALL';
+  selectedBookingStatus = 'ALL';
+  selectedPaymentStatus = 'ALL';
+  selectedPaymentMethod = 'ALL';
+
+  carStatusFilters = ['ALL', 'AVAILABLE', 'BOOKED', 'RENTED', 'MAINTENANCE'];
+  paymentStatusFilters = ['ALL', 'SUCCESS', 'FAILED', 'PENDING'];
+  paymentMethodFilters = ['ALL', 'Cash', 'Card', 'Bank Transfer', 'Online Payment'];
+
   editingId: number | null = null;
   car: Car = this.emptyCar();
 
@@ -142,6 +153,45 @@ export class AdminComponent implements OnInit {
     return this.payments
       .filter(p => p.status === 'SUCCESS')
       .reduce((sum, p) => sum + Number(p.amount || 0), 0);
+  }
+
+  get filteredCars() {
+    return this.cars.filter(car => {
+      const search = this.carSearch.toLowerCase();
+
+      const matchesSearch =
+        !search ||
+        car.brand?.toLowerCase().includes(search) ||
+        car.model?.toLowerCase().includes(search);
+
+      const matchesStatus =
+        this.selectedCarStatus === 'ALL' || car.status === this.selectedCarStatus;
+
+      const matchesFuel =
+        this.selectedFuelType === 'ALL' || car.fuelType === this.selectedFuelType;
+
+      return matchesSearch && matchesStatus && matchesFuel;
+    });
+  }
+
+  get filteredBookings() {
+    if (this.selectedBookingStatus === 'ALL') {
+      return this.bookings;
+    }
+
+    return this.bookings.filter(b => b.status === this.selectedBookingStatus);
+  }
+
+  get filteredPayments() {
+    return this.payments.filter(p => {
+      const matchesStatus =
+        this.selectedPaymentStatus === 'ALL' || p.status === this.selectedPaymentStatus;
+
+      const matchesMethod =
+        this.selectedPaymentMethod === 'ALL' || p.method === this.selectedPaymentMethod;
+
+      return matchesStatus && matchesMethod;
+    });
   }
 
   private normalizePaymentDate(createdAt: string | number[]): string {
