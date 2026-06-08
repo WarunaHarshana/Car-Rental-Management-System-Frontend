@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+import { RouterLink } from '@angular/router';
 import { CarService, Car } from '../../services/car.service';
 import { BookingService, Booking } from '../../services/booking.service';
 import { PaymentService, Payment, PaymentApiResponse } from '../../services/payment.service';
@@ -8,7 +9,7 @@ import { PaymentService, Payment, PaymentApiResponse } from '../../services/paym
 @Component({
   selector: 'app-admin',
   standalone: true,
-  imports: [CommonModule, FormsModule],
+  imports: [CommonModule, FormsModule, RouterLink],
   templateUrl: './admin.component.html',
   styleUrl: './admin.component.css'
 })
@@ -125,10 +126,22 @@ export class AdminComponent implements OnInit {
     });
   }
 
+  get totalCars(): number {
+    return this.cars.length;
+  }
+
+  get availableCars(): number {
+    return this.cars.filter(c => c.status === 'AVAILABLE').length;
+  }
+
+  get totalBookings(): number {
+    return this.bookings.length;
+  }
+
   get totalRevenue(): number {
     return this.payments
-      .filter((payment) => payment.status === 'SUCCESS')
-      .reduce((sum, payment) => sum + (payment.amount || 0), 0);
+      .filter(p => p.status === 'SUCCESS')
+      .reduce((sum, p) => sum + Number(p.amount || 0), 0);
   }
 
   private normalizePaymentDate(createdAt: string | number[]): string {
