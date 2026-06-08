@@ -1,17 +1,22 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { provideHttpClient } from '@angular/common/http';
+import { provideRouter } from '@angular/router';
+import { CarDetailComponent } from './car-detail.component';
 
-import { CarDetail } from './car-detail';
-
-describe('CarDetail', () => {
-  let component: CarDetail;
-  let fixture: ComponentFixture<CarDetail>;
+describe('CarDetailComponent', () => {
+  let component: CarDetailComponent;
+  let fixture: ComponentFixture<CarDetailComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [CarDetail],
+      imports: [CarDetailComponent],
+      providers: [
+        provideHttpClient(),
+        provideRouter([])
+      ]
     }).compileComponents();
 
-    fixture = TestBed.createComponent(CarDetail);
+    fixture = TestBed.createComponent(CarDetailComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

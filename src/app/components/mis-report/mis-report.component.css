@@ -1,0 +1,120 @@
+/* MIS Reports CSS — Modern Corporate Light Theme */
+
+.container {
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+}
+
+/* Tab Pills Styling */
+.nav-pills {
+  background-color: #f8f9fa !important;
+}
+
+.nav-pills .nav-link {
+  color: #495057;
+  font-weight: 500;
+  border-radius: 6px;
+  transition: all 0.2s ease;
+  background: transparent;
+  border: none;
+}
+
+.nav-pills .nav-link:hover:not(.active) {
+  background-color: #e9ecef;
+  color: #212529;
+}
+
+.nav-pills .nav-link.active {
+  background-color: #0d6efd;
+  color: #ffffff;
+  box-shadow: 0 2px 6px rgba(13, 110, 253, 0.2);
+}
+
+/* Card hover animation */
+.card {
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  border-radius: 8px !important;
+}
+
+.card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.06) !important;
+}
+
+.card-header {
+  border-top-left-radius: 8px !important;
+  border-top-right-radius: 8px !important;
+  padding: 16px 20px !important;
+}
+
+.card-body {
+  padding: 20px 24px !important;
+}
+
+/* List group in Quick Insights */
+.list-group-item {
+  border-color: rgba(0, 0, 0, 0.05) !important;
+}
+
+/* Tables and badges */
+.table-responsive {
+  background: #ffffff;
+}
+
+.table th {
+  font-weight: 600;
+  color: #495057;
+  font-size: 0.825rem;
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+  border-bottom-width: 1px !important;
+}
+
+.table td {
+  font-size: 0.9rem;
+}
+
+/* Progress bar transitions */
+.progress-bar {
+  transition: width 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+  border-radius: 4px;
+}
+
+.progress {
+  background-color: #e9ecef;
+  border-radius: 4px;
+  overflow: hidden;
+}
+
+/* Animations & Utilities */
+.animate-in {
+  animation: fadeSlideIn 0.3s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+}
+
+@keyframes fadeSlideIn {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.spinning {
+  animation: spin 1s linear infinite;
+  display: inline-block;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+/* Flex custom 5 columns helper */
+@media (min-width: 768px) {
+  .row-cols-md-5 > * {
+    flex: 0 0 20%;
+    max-width: 20%;
+  }
+}

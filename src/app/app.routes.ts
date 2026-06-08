@@ -6,6 +6,7 @@ import { CarDetailComponent } from './components/car-detail/car-detail.component
 import { adminGuard, authGuard } from './guards/auth.guard';
 import { MyBookingsComponent } from './components/my-bookings/my-bookings.component';
 import { AdminComponent } from './components/admin/admin.component';
+import { MisReportComponent } from './components/mis-report/mis-report.component';
 
 export const routes: Routes = [
   { path: '', redirectTo: 'cars', pathMatch: 'full' },
@@ -15,5 +16,6 @@ export const routes: Routes = [
   { path: 'register', component: RegisterComponent },
   { path: 'my-bookings', component: MyBookingsComponent, canActivate: [authGuard] },
   { path: 'admin', component: AdminComponent, canActivate: [adminGuard] },
+  { path: 'mis-reports', component: MisReportComponent, canActivate: [adminGuard] },
   { path: '**', redirectTo: 'cars' }
 ];

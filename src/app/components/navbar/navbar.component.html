@@ -12,6 +12,7 @@
       </span>
 
       <a *ngIf="authService.isAdmin()" class="nav-link" routerLink="/admin">Admin</a>
+      <a *ngIf="authService.isAdmin()" class="nav-link" routerLink="/mis-reports">📊 MIS Reports</a>
       <a class="nav-link" routerLink="/my-bookings">My Bookings</a>
 
       <button class="btn btn-outline-light btn-sm" (click)="onLogout()">Logout</button>
