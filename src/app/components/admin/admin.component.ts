@@ -33,6 +33,7 @@ export class AdminComponent implements OnInit {
 
   readonly carStatuses = ['AVAILABLE', 'BOOKED', 'MAINTENANCE'];
   readonly bookingStatuses = ['PENDING', 'CONFIRMED', 'CANCELLED', 'COMPLETED'];
+  readonly fuelTypes = ['Petrol', 'Diesel', 'Hybrid', 'Electric', 'CNG', 'Plug-in Hybrid'];
 
   constructor(
     private carService: CarService,
@@ -153,10 +154,18 @@ export class AdminComponent implements OnInit {
     };
     this.selectedPhotoFile = null;
     this.photoPreviewUrl = car.imageUrl
-      ? 'http://localhost:8080' + car.imageUrl
+      ? this.resolveImageUrl(car.imageUrl)
       : null;
     this.successMessage = '';
     this.errorMessage = '';
+  }
+
+  resolveImageUrl(imageUrl?: string): string {
+    if (!imageUrl) return '';
+    if (imageUrl.startsWith('http://') || imageUrl.startsWith('https://')) {
+      return imageUrl;
+    }
+    return 'http://localhost:8080' + imageUrl;
   }
 
   saveCar(): void {

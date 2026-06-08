@@ -28,7 +28,12 @@
           </div>
           <div class="col-12 col-md-4">
             <label class="form-label">Fuel Type</label>
-            <input class="form-control" name="fuelType" [(ngModel)]="car.fuelType" required>
+            <select class="form-select" name="fuelType" [(ngModel)]="car.fuelType" required>
+              <option value="">Select fuel type</option>
+              @for (fuel of fuelTypes; track fuel) {
+                <option [value]="fuel" [textContent]="fuel"></option>
+              }
+            </select>
           </div>
           <div class="col-12 col-md-4">
             <label class="form-label">Seats</label>
@@ -49,6 +54,17 @@
           <div class="col-12">
             <label class="form-label">Car Photo (optional)</label>
             <input type="file" class="form-control" accept="image/*" (change)="onPhotoSelected($event)">
+            <div class="mt-2">
+              <label class="form-label text-muted small">— or paste an image URL —</label>
+              <input
+                type="url"
+                class="form-control"
+                name="imageUrl"
+                [(ngModel)]="car.imageUrl"
+                placeholder="https://example.com/car.jpg"
+              >
+              <small class="text-muted">Use this if you want to use an online image instead of uploading a file. Uploaded file takes priority.</small>
+            </div>
             @if (photoPreviewUrl) {
               <div class="mt-2">
                 <img [src]="photoPreviewUrl" alt="Car preview" class="img-thumbnail" style="max-height: 160px; object-fit: cover;">
@@ -103,7 +119,7 @@
                   <td>{{ c.id }}</td>
                   <td>
                     @if (c.imageUrl) {
-                      <img [src]="'http://localhost:8080' + c.imageUrl" alt="Car" class="img-thumbnail" style="width:60px;height:45px;object-fit:cover;">
+                      <img [src]="resolveImageUrl(c.imageUrl)" alt="Car" class="img-thumbnail" style="width:60px;height:45px;object-fit:cover;">
                     } @else {
                       <span class="text-muted small">No photo</span>
                     }

@@ -42,8 +42,8 @@
       <div class="col-12 col-md-6 col-lg-4">
         <div class="card h-100 shadow-sm border-light-subtle rounded-3 transition-hover">
 
-          @if (car.imageUrl) {
-            <img [src]="'http://localhost:8080' + car.imageUrl" class="card-img-top" alt="{{ car.brand }} {{ car.model }}" style="height:180px;object-fit:cover;">
+          @if (getCarImageUrl(car.imageUrl)) {
+            <img [src]="getCarImageUrl(car.imageUrl)" class="card-img-top" [alt]="car.brand + ' ' + car.model" style="height:180px;object-fit:cover;">
           } @else {
             <div class="d-flex align-items-center justify-content-center bg-light border-bottom" style="height:180px;">
               <i class="bi bi-car-front text-secondary" style="font-size:3rem;opacity:.35;"></i>

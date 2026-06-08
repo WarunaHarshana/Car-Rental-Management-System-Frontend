@@ -4,8 +4,8 @@
   } @else if (car) {
     <div class="card shadow-sm">
 
-      @if (car.imageUrl) {
-        <img [src]="'http://localhost:8080' + car.imageUrl" class="card-img-top" alt="{{ car.brand }} {{ car.model }}" style="max-height:340px;object-fit:cover;">
+      @if (getCarImageUrl(car.imageUrl)) {
+        <img [src]="getCarImageUrl(car.imageUrl)" class="card-img-top" [alt]="car.brand + ' ' + car.model" style="max-height:340px;object-fit:cover;">
       } @else {
         <div class="d-flex align-items-center justify-content-center bg-light border-bottom" style="height:220px;">
           <i class="bi bi-car-front text-secondary" style="font-size:5rem;opacity:.3;"></i>

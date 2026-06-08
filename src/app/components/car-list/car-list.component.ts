@@ -109,4 +109,12 @@ export class CarListComponent implements OnInit {
     }
   });
 }
+
+  getCarImageUrl(imageUrl?: string): string | null {
+    if (!imageUrl) return null;
+    if (imageUrl.startsWith('http://') || imageUrl.startsWith('https://')) {
+      return imageUrl;
+    }
+    return 'http://localhost:8080' + imageUrl;
+  }
 }

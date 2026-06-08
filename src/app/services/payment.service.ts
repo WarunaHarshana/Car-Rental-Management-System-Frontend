@@ -2,22 +2,20 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 
+/** Normalized payment — createdAt is always a string (ISO). Used in components. */
 export interface Payment {
   id: number;
   amount: number;
   method: string;
   status: string;
   createdAt: string;
+  bookingId?: number;
   booking?: { id: number };
 }
 
-export interface PaymentApiResponse {
-  id: number;
-  amount: number;
-  method: string;
-  status: string;
+/** Raw shape returned by the backend — createdAt may be a LocalDateTime array. */
+export interface PaymentApiResponse extends Omit<Payment, 'createdAt'> {
   createdAt: string | number[];
-  booking?: { id: number };
 }
 
 @Injectable({
@@ -28,11 +26,15 @@ export class PaymentService {
 
   constructor(private http: HttpClient) {}
 
-  checkout(bookingId: number, amount: number): Observable<any> {
-    return this.http.post(`${this.apiUrl}/checkout/${bookingId}`, { amount });
+  // Send amount + selected payment method to the backend
+  checkout(bookingId: number, amount: number, method: string = 'Card'): Observable<Payment> {
+    return this.http.post<Payment>(`${this.apiUrl}/checkout/${bookingId}`, {
+      amount,
+      method
+    });
   }
 
-  getAllPayments(): Observable<PaymentApiResponse[]> {
-    return this.http.get<PaymentApiResponse[]>(this.apiUrl);
+  getAllPayments(): Observable<Payment[]> {
+    return this.http.get<Payment[]>(this.apiUrl);
   }
 }

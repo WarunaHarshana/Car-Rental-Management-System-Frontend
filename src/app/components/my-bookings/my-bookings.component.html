@@ -2,11 +2,15 @@
   <h2 class="mb-4"><i class="bi bi-journal-bookmark me-2"></i>My Bookings</h2>
 
   @if (successMessage) {
-    <div class="alert alert-success">{{ successMessage }}</div>
+    <div class="alert alert-success alert-dismissible">
+      <i class="bi bi-check-circle-fill me-2"></i>{{ successMessage }}
+    </div>
   }
 
   @if (errorMessage) {
-    <div class="alert alert-danger">{{ errorMessage }}</div>
+    <div class="alert alert-danger">
+      <i class="bi bi-exclamation-triangle-fill me-2"></i>{{ errorMessage }}
+    </div>
   }
 
   @if (infoMessage) {
@@ -18,51 +22,106 @@
   } @else if (bookings.length === 0) {
     <div class="alert alert-info">You have no bookings yet.</div>
   } @else {
-    <div class="table-responsive">
-      <table class="table table-hover align-middle">
-        <thead class="table-light">
-          <tr>
-            <th>Car</th>
-            <th>From</th>
-            <th>To</th>
-            <th>Total (LKR)</th>
-            <th>Status</th>
-            <th>Payment</th>
-            <th></th>
-          </tr>
-        </thead>
-        <tbody>
-          @for (b of bookings; track b.id) {
-            <tr>
-              <td>
-                <span [textContent]="b.car?.brand"></span>
-                <span [textContent]="b.car?.model"></span>
-              </td>
-              <td [textContent]="b.startDate"></td>
-              <td [textContent]="b.endDate"></td>
-              <td [textContent]="b.totalPrice"></td>
-              <td><span class="badge bg-secondary" [textContent]="b.status"></span></td>
-              <td>
-                <span class="badge" [class.bg-success]="b.paymentStatus === 'PAID'" [class.bg-warning]="b.paymentStatus !== 'PAID'" [textContent]="b.paymentStatus ?? 'PENDING'"></span>
-              </td>
-              <td>
-                <button
-                  class="btn btn-outline-primary btn-sm me-2"
-                  (click)="pay(b)"
-                  [disabled]="b.paymentStatus === 'PAID' || actionInProgressId === b.id"
-                >
-                  @if (actionInProgressId === b.id) {
-                    Paying...
-                  } @else {
-                    Pay
-                  }
-                </button>
-                <button class="btn btn-outline-danger btn-sm" (click)="cancel(b.id)">Cancel</button>
-              </td>
-            </tr>
-          }
-        </tbody>
-      </table>
+    <div class="row g-4">
+      @for (b of bookings; track b.id) {
+        <div class="col-12 col-lg-6">
+          <div class="card shadow-sm border-0 h-100">
+            <div class="card-header d-flex justify-content-between align-items-center">
+              <div>
+                <strong>{{ b.car?.brand }} {{ b.car?.model }}</strong>
+              </div>
+              <span class="badge bg-secondary">{{ b.status }}</span>
+            </div>
+
+            <div class="card-body">
+              <div class="row g-2 mb-3">
+                <div class="col-6">
+                  <div class="small text-muted">From</div>
+                  <div class="fw-semibold">{{ b.startDate }}</div>
+                </div>
+                <div class="col-6">
+                  <div class="small text-muted">To</div>
+                  <div class="fw-semibold">{{ b.endDate }}</div>
+                </div>
+                <div class="col-6">
+                  <div class="small text-muted">Total</div>
+                  <div class="fw-bold text-primary">LKR {{ b.totalPrice }}</div>
+                </div>
+                <div class="col-6">
+                  <div class="small text-muted">Payment</div>
+                  <span
+                    class="badge"
+                    [class.bg-success]="b.paymentStatus === 'PAID'"
+                    [class.bg-warning]="b.paymentStatus !== 'PAID'"
+                    [textContent]="b.paymentStatus ?? 'PENDING'"
+                  ></span>
+                </div>
+              </div>
+
+              <!-- Checkout section -->
+              @if (b.paymentStatus === 'PAID') {
+                <div class="d-flex align-items-center gap-2 mt-2">
+                  <span class="badge bg-success fs-6 px-3 py-2">
+                    <i class="bi bi-check-circle me-1"></i>Paid
+                  </span>
+                </div>
+              } @else {
+                <div class="card border-primary mt-2">
+                  <div class="card-body py-3">
+                    <h6 class="card-title mb-3">
+                      <i class="bi bi-credit-card me-2 text-primary"></i>Checkout
+                    </h6>
+
+                    <div class="row g-2 align-items-end">
+                      <div class="col-md-5">
+                        <label class="form-label small fw-semibold">Payment method</label>
+                        <select
+                          class="form-select form-select-sm"
+                          [(ngModel)]="selectedPaymentMethod"
+                        >
+                          @for (method of paymentMethods; track method) {
+                            <option [value]="method" [textContent]="method"></option>
+                          }
+                        </select>
+                      </div>
+
+                      <div class="col-md-4">
+                        <label class="form-label small fw-semibold">Amount</label>
+                        <div class="fw-bold text-success" [textContent]="'LKR ' + b.totalPrice"></div>
+                      </div>
+
+                      <div class="col-md-3">
+                        <button
+                          class="btn btn-primary btn-sm w-100"
+                          [disabled]="processingPaymentId === b.id"
+                          (click)="checkout(b.id, b.totalPrice)"
+                        >
+                          @if (processingPaymentId === b.id) {
+                            <span class="spinner-border spinner-border-sm me-1" role="status"></span>
+                            Processing
+                          } @else {
+                            <i class="bi bi-lock-fill me-1"></i>Pay Now
+                          }
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              }
+            </div>
+
+            <div class="card-footer bg-transparent border-0 pb-3">
+              <button
+                class="btn btn-outline-danger btn-sm"
+                [disabled]="b.paymentStatus === 'PAID'"
+                (click)="cancel(b.id)"
+              >
+                <i class="bi bi-x-circle me-1"></i>Cancel Booking
+              </button>
+            </div>
+          </div>
+        </div>
+      }
     </div>
   }
 </div>

@@ -1,4 +1,5 @@
 import { CommonModule } from '@angular/common';
+import { FormsModule } from '@angular/forms';
 import { Component, OnInit } from '@angular/core';
 import { BookingService, Booking } from '../../services/booking.service';
 import { AuthService } from '../../services/auth.service';
@@ -7,7 +8,7 @@ import { PaymentService } from '../../services/payment.service';
 @Component({
   selector: 'app-my-bookings',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, FormsModule],
   templateUrl: './my-bookings.component.html'
 })
 export class MyBookingsComponent implements OnInit {
@@ -17,6 +18,11 @@ export class MyBookingsComponent implements OnInit {
   successMessage = '';
   errorMessage = '';
   infoMessage = '';
+
+  // Payment method selection
+  selectedPaymentMethod = 'Card';
+  processingPaymentId: number | null = null;
+  paymentMethods: string[] = ['Cash', 'Card', 'Bank Transfer', 'Online Payment'];
 
   constructor(
     private bookingService: BookingService,
@@ -31,7 +37,6 @@ export class MyBookingsComponent implements OnInit {
   loadBookings(): void {
     this.errorMessage = '';
     this.infoMessage = '';
-    const myName = this.authService.getCurrentUser()?.name;
     this.bookingService.getAllBookings().subscribe({
       next: (all) => {
         const identityCandidates = this.getIdentityCandidates();
@@ -75,27 +80,24 @@ export class MyBookingsComponent implements OnInit {
     );
   }
 
-  pay(booking: Booking): void {
-    if (booking.paymentStatus === 'PAID' || this.actionInProgressId === booking.id) {
-      return;
-    }
+  // Upgraded checkout: sends selected payment method to backend
+  checkout(bookingId: number, amount: number): void {
+    if (this.processingPaymentId === bookingId) return;
 
-    if (!confirm('Complete payment for this booking?')) return;
-
-    this.actionInProgressId = booking.id;
-    this.errorMessage = '';
+    this.processingPaymentId = bookingId;
     this.successMessage = '';
+    this.errorMessage = '';
 
-    this.paymentService.checkout(booking.id, booking.totalPrice).subscribe({
+    this.paymentService.checkout(bookingId, amount, this.selectedPaymentMethod).subscribe({
       next: () => {
-        this.successMessage = 'Payment completed successfully.';
-        this.actionInProgressId = null;
+        this.successMessage = `Payment completed successfully via ${this.selectedPaymentMethod}.`;
+        this.processingPaymentId = null;
         this.loadBookings();
       },
       error: (err) => {
         this.errorMessage = 'Payment failed. Please try again.';
         console.error('Payment failed:', err);
-        this.actionInProgressId = null;
+        this.processingPaymentId = null;
       }
     });
   }

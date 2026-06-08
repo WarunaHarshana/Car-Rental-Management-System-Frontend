@@ -28,4 +28,12 @@ export class CarDetailComponent implements OnInit {
       error: () => { this.loading = false; }
     });
   }
+
+  getCarImageUrl(imageUrl?: string): string | null {
+    if (!imageUrl) return null;
+    if (imageUrl.startsWith('http://') || imageUrl.startsWith('https://')) {
+      return imageUrl;
+    }
+    return 'http://localhost:8080' + imageUrl;
+  }
 }
