@@ -166,7 +166,10 @@
       </div>
 
       @if (loadingCars) {
-        <div class="p-3 text-muted">Loading cars...</div>
+        <div class="p-4 text-center text-muted">
+          <span class="spinner-border spinner-border-sm text-primary me-2" role="status"></span>
+          Loading cars...
+        </div>
       } @else if (cars.length === 0) {
         <div class="p-3 text-muted">No cars available.</div>
       } @else {
@@ -240,7 +243,10 @@
       </div>
 
       @if (loadingBookings) {
-        <div class="p-3 text-muted">Loading bookings...</div>
+        <div class="p-4 text-center text-muted">
+          <span class="spinner-border spinner-border-sm text-primary me-2" role="status"></span>
+          Loading bookings...
+        </div>
       } @else if (bookings.length === 0) {
         <div class="p-3 text-muted">No bookings yet.</div>
       } @else {
@@ -308,7 +314,10 @@
       </div>
 
       @if (loadingPayments) {
-        <div class="p-3 text-muted">Loading transactions...</div>
+        <div class="p-4 text-center text-muted">
+          <span class="spinner-border spinner-border-sm text-primary me-2" role="status"></span>
+          Loading transactions...
+        </div>
       } @else if (payments.length === 0) {
         <div class="p-3 text-muted">No transactions yet.</div>
       } @else {

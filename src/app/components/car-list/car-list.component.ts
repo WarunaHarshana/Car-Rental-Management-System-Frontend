@@ -53,6 +53,7 @@ export class CarListComponent implements OnInit {
 
   successMessage: string = '';
   errorMessage: string = '';
+  loading = false;
 
   constructor(
     private carService: CarService,
@@ -65,9 +66,18 @@ export class CarListComponent implements OnInit {
   }
 
   loadCars(): void {
+    this.loading = true;
+    this.errorMessage = '';
     this.carService.getAllCars().subscribe({
-      next: (data) => this.cars = data,
-      error: (err) => console.error('Failed to load fleet:', err)
+      next: (data) => {
+        this.cars = data;
+        this.loading = false;
+      },
+      error: (err) => {
+        this.errorMessage = 'Failed to load cars. Please try again.';
+        this.loading = false;
+        console.error('Failed to load fleet:', err);
+      }
     });
   }
 

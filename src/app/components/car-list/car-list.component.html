@@ -6,13 +6,27 @@
     <span class="badge bg-secondary fs-6">{{ cars.length }} Vehicles Loaded</span>
   </div>
 
-  @if (cars.length === 0) {
-    <div class="alert alert-info text-center shadow-sm p-4" role="alert">
-      <i class="bi bi-info-circle-fill display-6 text-info mb-2 d-block"></i>
-      <h5 class="alert-heading fw-bold">No Vehicles Found</h5>
-      <p class="mb-0 text-muted">There are currently no rental vehicles registered in the system database.</p>
+  @if (loading) {
+    <div class="text-center my-5">
+      <div class="spinner-border text-primary" role="status">
+        <span class="visually-hidden">Loading...</span>
+      </div>
+      <p class="text-muted mt-2">Loading vehicles...</p>
     </div>
-  }
+  } @else if (errorMessage && cars.length === 0) {
+    <div class="alert alert-danger text-center shadow-sm p-4" role="alert">
+      <i class="bi bi-exclamation-triangle-fill display-6 text-danger mb-2 d-block"></i>
+      <h5 class="alert-heading fw-bold">Error Loading Fleet</h5>
+      <p class="mb-0 text-muted">{{ errorMessage }}</p>
+    </div>
+  } @else {
+    @if (cars.length === 0) {
+      <div class="alert alert-info text-center shadow-sm p-4" role="alert">
+        <i class="bi bi-info-circle-fill display-6 text-info mb-2 d-block"></i>
+        <h5 class="alert-heading fw-bold">No Vehicles Found</h5>
+        <p class="mb-0 text-muted">There are currently no rental vehicles registered in the system database.</p>
+      </div>
+    }
 
   <!-- Search & filter bar -->
   <div class="row g-3 mb-4">
@@ -100,6 +114,7 @@
       </div>
     }
   </div>
+  }
 </div>
 
 <div class="modal fade" id="bookingModal" tabindex="-1" aria-labelledby="bookingModalLabel" aria-hidden="true">
