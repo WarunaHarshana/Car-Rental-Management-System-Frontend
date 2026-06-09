@@ -84,6 +84,10 @@ export class MyBookingsComponent implements OnInit {
   checkout(bookingId: number, amount: number): void {
     if (this.processingPaymentId === bookingId) return;
 
+    if (!confirm(`Are you sure you want to proceed with the payment of LKR ${amount} using ${this.selectedPaymentMethod}?`)) {
+      return;
+    }
+
     this.processingPaymentId = bookingId;
     this.successMessage = '';
     this.errorMessage = '';
