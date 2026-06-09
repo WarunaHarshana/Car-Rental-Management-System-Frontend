@@ -17,6 +17,32 @@ export class NavbarComponent {
     private router: Router
   ) {}
 
+  get currentUser(): any {
+    return this.authService.getCurrentUser();
+  }
+
+  isLoggedIn(): boolean {
+    return this.authService.isLoggedIn();
+  }
+
+  isAdmin(): boolean {
+    return this.authService.isAdmin();
+  }
+
+  getUserInitials(): string {
+    const user = this.currentUser;
+    if (!user) return '?';
+    
+    const name = user.name || user.email || '';
+    if (!name) return '?';
+    
+    const parts = name.trim().split(/\s+/);
+    if (parts.length >= 2) {
+      return (parts[0][0] + parts[1][0]).toUpperCase();
+    }
+    return name.slice(0, 2).toUpperCase();
+  }
+
   onLogout(): void {
     this.authService.logout();
     console.log('User logged out successfully.');
