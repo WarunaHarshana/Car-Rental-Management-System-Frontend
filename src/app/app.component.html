@@ -1,3 +1,5 @@
-<app-navbar></app-navbar>
+<app-navbar [isTransparent]="isLandingPage"></app-navbar>
 
-<router-outlet></router-outlet>
+<main [class.pt-nav]="!isLandingPage">
+  <router-outlet></router-outlet>
+</main>

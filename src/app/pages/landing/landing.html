@@ -1,0 +1,190 @@
+<section class="hero-section text-white">
+  <div class="container py-5">
+    <div class="row align-items-center min-vh-75">
+      <div class="col-lg-6">
+        <span class="badge bg-warning text-dark mb-3">
+          Premium Car Rental Service
+        </span>
+
+        <h1 class="display-4 fw-bold mb-3">
+          Rent Your Perfect Car Easily
+        </h1>
+
+        <p class="lead mb-4">
+          Browse available vehicles, make reservations, complete payments, and manage your bookings through one simple car rental platform.
+        </p>
+
+        <div class="d-flex flex-wrap gap-2">
+          <a routerLink="/cars" class="btn btn-warning btn-lg">
+            <i class="bi bi-car-front me-2"></i>
+            Browse Cars
+          </a>
+
+          @if (!authService.isLoggedIn()) {
+            <a routerLink="/login" class="btn btn-outline-light btn-lg">
+              Login
+            </a>
+            <a routerLink="/register" class="btn btn-light btn-lg">
+              Register
+            </a>
+          } @else {
+            <a routerLink="/my-bookings" class="btn btn-outline-light btn-lg">
+              My Bookings
+            </a>
+          }
+        </div>
+      </div>
+
+      <div class="col-lg-6 mt-5 mt-lg-0">
+        <div class="hero-card card shadow-lg border-0">
+          <div class="card-body p-4 text-white">
+            <h5 class="fw-bold mb-3">Why choose us?</h5>
+
+            <div class="d-flex align-items-center mb-3">
+              <div class="icon-box bg-primary text-white me-3">
+                <i class="bi bi-calendar-check"></i>
+              </div>
+              <div>
+                <h6 class="mb-0">Easy Booking</h6>
+                <small class="text-white-50">Reserve cars with simple date selection.</small>
+              </div>
+            </div>
+
+            <div class="d-flex align-items-center mb-3">
+              <div class="icon-box bg-success text-white me-3">
+                <i class="bi bi-credit-card"></i>
+              </div>
+              <div>
+                <h6 class="mb-0">Secure Payments</h6>
+                <small class="text-white-50">Checkout with multiple payment methods.</small>
+              </div>
+            </div>
+
+            <div class="d-flex align-items-center">
+              <div class="icon-box bg-warning text-dark me-3">
+                <i class="bi bi-speedometer2"></i>
+              </div>
+              <div>
+                <h6 class="mb-0">Admin Dashboard</h6>
+                <small class="text-white-50">Track bookings, cars, payments, and reports.</small>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<section class="container py-5">
+  <div class="text-center mb-5">
+    <h2 class="fw-bold">System Features</h2>
+    <p class="text-muted">Everything needed for a complete car rental management system.</p>
+  </div>
+
+  <div class="row g-4">
+    <div class="col-md-3">
+      <div class="card h-100 shadow-sm border-0 text-center">
+        <div class="card-body">
+          <i class="bi bi-car-front display-5 text-primary"></i>
+          <h5 class="mt-3">Car Catalog</h5>
+          <p class="text-muted small">
+            Browse cars with photos, search, filters, and detailed information.
+          </p>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-md-3">
+      <div class="card h-100 shadow-sm border-0 text-center">
+        <div class="card-body">
+          <i class="bi bi-calendar2-check display-5 text-success"></i>
+          <h5 class="mt-3">Bookings</h5>
+          <p class="text-muted small">
+            Customers can create, view, and cancel their reservations.
+          </p>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-md-3">
+      <div class="card h-100 shadow-sm border-0 text-center">
+        <div class="card-body">
+          <i class="bi bi-credit-card display-5 text-warning"></i>
+          <h5 class="mt-3">Payments</h5>
+          <p class="text-muted small">
+            Payment checkout with method selection and transaction history.
+          </p>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-md-3">
+      <div class="card h-100 shadow-sm border-0 text-center">
+        <div class="card-body">
+          <i class="bi bi-bar-chart display-5 text-danger"></i>
+          <h5 class="mt-3">MIS Reports</h5>
+          <p class="text-muted small">
+            Admin reports for revenue, bookings, customers, and car utilization.
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="bg-light py-5">
+  <div class="container">
+    <div class="text-center mb-5">
+      <h2 class="fw-bold">How It Works</h2>
+      <p class="text-muted">A simple rental process for customers.</p>
+    </div>
+
+    <div class="row g-4">
+      <div class="col-md-4">
+        <div class="text-center">
+          <div class="step-circle bg-primary text-white mx-auto mb-3">1</div>
+          <h5>Choose a Car</h5>
+          <p class="text-muted">
+            Browse available cars and view details before booking.
+          </p>
+        </div>
+      </div>
+
+      <div class="col-md-4">
+        <div class="text-center">
+          <div class="step-circle bg-success text-white mx-auto mb-3">2</div>
+          <h5>Book Dates</h5>
+          <p class="text-muted">
+            Select rental dates and submit a reservation request.
+          </p>
+        </div>
+      </div>
+
+      <div class="col-md-4">
+        <div class="text-center">
+          <div class="step-circle bg-warning text-dark mx-auto mb-3">3</div>
+          <h5>Pay & Drive</h5>
+          <p class="text-muted">
+            Complete payment and track your booking from My Bookings.
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="container py-5">
+  <div class="card border-0 shadow-sm bg-dark text-white">
+    <div class="card-body p-5 text-center">
+      <h2 class="fw-bold">Ready to rent a car?</h2>
+      <p class="mb-4 text-white-50">
+        Start by browsing the available car catalog.
+      </p>
+      <a routerLink="/cars" class="btn btn-warning btn-lg">
+        Browse Cars
+      </a>
+    </div>
+  </div>
+</section>
